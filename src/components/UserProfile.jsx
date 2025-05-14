@@ -1,20 +1,67 @@
 import React, { useEffect, useState } from "react";
-import { getUserById } from "../api.js";
-import { Link } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
+import {useNavigate} from "react-router-dom";
+import {getUserById} from "../api.js";
 
-const UserProfile = ({ userData }) => {
-    console.log(userData);
-    return (
+const UserProfile = () => {
+    const [userData, setUserData] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+            navigate("/auth");
+            return;
+        }
+        let decodedAccessToken;
+        try {
+            decodedAccessToken = jwtDecode(accessToken);
+        }
+        catch (err) {
+            console.error("Invalid token:", err);
+            localStorage.removeItem("accessToken");
+            navigate("/auth");
+            return;
+        }
+        getUserById(decodedAccessToken.userId).then((res) => {
+            setUserData(res.data.user);
+            setLoading(false);
+        }).catch((err) => {
+            console.error(err);
+            setLoading(false);
+            localStorage.removeItem("accessToken");
+            navigate("/auth");
+        });
+    }, [navigate]);
+    if (loading) {
+        return <h3>Loading...</h3>;
+    }
+    return (userData ? (
         <div>
-            <h2>User data</h2>
-            {userData.imageUrl && (<img src={userData.imageUrl} alt={userData.firstName} />)}
-            <ul>
-                <li>{userData.firstName}</li>
-                <li>{userData.lastName}</li>
-                <li>{userData.username}</li>
-            </ul>
+            <h2>User profile</h2>
+            <p>{errorMessage}</p>
+            <section>
+                <div>
+                    <span>Firstname: </span>
+                    <span>{userData.firstName}</span>
+                </div>
+                <div>
+                    <span>Lastname: </span>
+                    <span>{userData.lastName}</span>
+                </div>
+                <div>
+                    <span>Username: </span>
+                    <span>{userData.username}</span>
+                </div>
+                <div>
+                    <span>User role: </span>
+                    <span>{userData.role}</span>
+                </div>
+            </section>
         </div>
+    ) : <h3>No user data</h3>
     );
 };
 

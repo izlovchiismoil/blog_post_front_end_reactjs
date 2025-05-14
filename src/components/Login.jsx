@@ -6,47 +6,60 @@ import { jwtDecode } from "jwt-decode";
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
-    const [accessToken, setAccessToken] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await  login({ user: { username, password } })
-                .then((res) => {
-                    console.log(res.data.accessToken)
-                    setAccessToken(res.data.accessToken)
-                })
-                .catch((err) => setError(err.message));
-
-            if (accessToken !== "") {
+            const tokenResponse = await login({ user: { username, password } });
+            if (tokenResponse.status === 200) {
+                const accessToken = tokenResponse.data.accessToken;
                 const decodedAccessToken = jwtDecode(accessToken);
-                if (decodedAccessToken) {
-                    localStorage.setItem("accessToken", accessToken);
-                    if (decodedAccessToken.userRole === "admin") {
-                        return navigate("/admin");
-                    }
-                    return navigate("/user");
+                if (!decodedAccessToken) {
+                    return navigate("/auth");
                 }
+                localStorage.setItem("accessToken", tokenResponse.data.accessToken);
+                return navigate("/user");
             }
-            else {
-                navigate("/login");
+        }
+        catch (err) {
+            console.error(err);
+            if (err.status === 401) {
+                return setErrorMessage("Username or password is incorrect (401)");
             }
-        } catch (err) {
-            if (err) {
-                console.log(err);
-                setError(err.message);
+            else if (err.status === 404) {
+                return setErrorMessage("Username or password is incorrect (404)");
+            }
+            else if (err.status === 403) {
+                return setErrorMessage("Access denied");
+            }
+            else if (err.status === 500) {
+                return setErrorMessage("Server Error");
+            }
+            else if (err.status === 400) {
+                return setErrorMessage("Bad Request");
+            }
+            else if (err) {
+                return setErrorMessage(err.message);
             }
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            {error && (<h3>{error}</h3>)}
-            <input placeholder="Username..." id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <input type="submit" value="Login" />
+        <form onSubmit={ handleSubmit } className="form">
+            <div className="mb-3">
+                <p className="text-danger ps-1">{errorMessage}</p>
+            </div>
+            <div className="mb-3">
+                <input className="form-control" type="text" name="username" placeholder="Username..." value={username} onChange={(e) => setUsername(e.target.value)} />
+            </div>
+            <div className="mb-3">
+                <input className="form-control" type="password" name="password" placeholder="Password..." value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <div>
+                <input className="btn btn-primary" type="submit" value="Login" />
+            </div>
         </form>
     );
 };

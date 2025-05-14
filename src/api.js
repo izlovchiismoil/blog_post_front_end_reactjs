@@ -9,11 +9,12 @@ const API = axios.create({
 
 API.interceptors.request.use((req) => {
     const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) req.headers.Authorization = `Bearer ${accessToken}`;
+    console.log(accessToken);
+    if (accessToken) req.headers.authorization = `Bearer ${accessToken}`;
     return req;
 });
 
-export const getUserById = (id) => API.get(`/users/${id}`);
+export const getUserById = (userId) => API.get(`/users/${userId}`);
 export const getPosts = () => API.get("/posts/all");
 export const getPostById = (id) => API.get(`/posts/${id}`);
 export const getPostsByCategoryId = (id) => API.get(`/posts/category/${id}`);

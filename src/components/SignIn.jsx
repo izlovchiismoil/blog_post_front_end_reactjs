@@ -1,9 +1,15 @@
 import {Link} from "react-router-dom";
+import {useAuth} from "../contexts/AuthContext.jsx";
 
 const SignIn = () => {
+    const { user, login, logout } = useAuth();
+
     return (
         <div>
-            <Link to="/login" className="btn btn-primary fs-5">Sign in</Link>
+            {user ?
+                (<Link to="/auth" className="btn btn-primary fs-5">Logout</Link>):
+                (<Link to="/auth/logout" className="btn btn-primary fs-5">Sign in</Link>)
+            }
         </div>
     )
 }
