@@ -10,9 +10,15 @@ import Login from "./components/Login.jsx";
 import AuthLayout from "./components/AuthLayout.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import UserProfile from "./components/UserProfile.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import UserList from "./components/UserList.jsx";
+import CategoryList from "./components/CategoryList.jsx";
+import PostList from "./components/PostList.jsx";
+import UpdateUser from "./components/UpdateUser.jsx";
 
 const App = () => {
     return (
+        <AuthProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>
@@ -26,14 +32,20 @@ const App = () => {
                     </Route>
                     <Route path="/auth" element={<AuthLayout />}>
                         <Route index element={<Login />} />
+                        <Route path="login" element={<Login />} />
                         <Route path="logout" element={<Login />} />
                     </Route>
                     <Route path="/user" element={<UserDashboard />}>
                         <Route index element={<UserProfile />} />
+                        <Route path="update" element={<UpdateUser />} />
+                        <Route path="profile" element={<UserProfile />} />
+                        <Route path="users" element={<UserList />} />
+                        <Route path="posts" element={<PostList />} />
+                        <Route path="categories" element={<CategoryList />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
-
+        </AuthProvider>
 )};
 
 export default App;

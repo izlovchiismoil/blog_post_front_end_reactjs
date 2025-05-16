@@ -1,67 +1,52 @@
 import React, { useEffect, useState } from "react";
-import {jwtDecode} from "jwt-decode";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {getUserById} from "../api.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
 
 const UserProfile = () => {
     const [userData, setUserData] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { userAuth } = useAuth();
 
     useEffect(() => {
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
+        if (!userAuth.userId) {
             navigate("/auth");
-            return;
         }
-        let decodedAccessToken;
-        try {
-            decodedAccessToken = jwtDecode(accessToken);
-        }
-        catch (err) {
-            console.error("Invalid token:", err);
-            localStorage.removeItem("accessToken");
-            navigate("/auth");
-            return;
-        }
-        getUserById(decodedAccessToken.userId).then((res) => {
+        getUserById(userAuth.userId).then((res) => {
             setUserData(res.data.user);
-            setLoading(false);
         }).catch((err) => {
             console.error(err);
-            setLoading(false);
-            localStorage.removeItem("accessToken");
             navigate("/auth");
         });
-    }, [navigate]);
-    if (loading) {
-        return <h3>Loading...</h3>;
-    }
-    return (userData ? (
-        <div>
-            <h2>User profile</h2>
-            <p>{errorMessage}</p>
-            <section>
-                <div>
-                    <span>Firstname: </span>
-                    <span>{userData.firstName}</span>
-                </div>
-                <div>
-                    <span>Lastname: </span>
-                    <span>{userData.lastName}</span>
-                </div>
-                <div>
-                    <span>Username: </span>
-                    <span>{userData.username}</span>
-                </div>
-                <div>
-                    <span>User role: </span>
-                    <span>{userData.role}</span>
-                </div>
-            </section>
-        </div>
-    ) : <h3>No user data</h3>
+    }, []);
+    return (
+        <>
+            {
+                userData ? (
+                    <div className="col">
+                        <div className="d-flex justify-content-end align-items-center pt-2 pb-2 pe-4">
+                            <NavLink to="/user/update" className="btn btn-primary">Edit user</NavLink>
+                        </div>
+                        <div className="row">
+                            <span className="col border pt-2 pb-2">Firstname </span>
+                            <span className="col border pt-2 pb-2">{userData.firstName}</span>
+                        </div>
+                        <div className="row">
+                            <span className="col border pt-2 pb-2">Lastname </span>
+                            <span className="col border pt-2 pb-2">{userData.lastName}</span>
+                        </div>
+                        <div className="row">
+                            <span className="col border pt-2 pb-2">Username </span>
+                            <span className="col border pt-2 pb-2">{userData.username}</span>
+                        </div>
+                        <div className="row">
+                            <span className="col border pt-2 pb-2">User role </span>
+                            <span className="col border pt-2 pb-2">{userData.role}</span>
+                        </div>
+                    </div>
+                ) : <h3 className="col">No user</h3>
+            }
+        </>
     );
 };
 

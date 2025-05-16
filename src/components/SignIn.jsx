@@ -3,7 +3,6 @@ import {useAuth} from "../contexts/AuthContext.jsx";
 
 const SignIn = () => {
     const { user, login, logout } = useAuth();
-
     return (
         <div>
             {user ?

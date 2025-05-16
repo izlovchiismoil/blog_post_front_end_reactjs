@@ -3,33 +3,37 @@ import {jwtDecode} from "jwt-decode";
 export const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [userAuth, setUserAuth] = useState(null);
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
             try {
                 const decodedAccessToken = jwtDecode(accessToken);
                 if (!decodedAccessToken) {
-                    setUser(null);
+                    setUserAuth(null);
                 }
-                setUser(decodedAccessToken);
+                setUserAuth(decodedAccessToken);
             }
             catch (err) {
-                setUser(null);
+                setUserAuth(null);
             }
         }
     }, []);
-    const login = (accessToken) => {
-        localStorage.setItem("accessToken", accessToken);
+    const loginAuth = (accessToken) => {
         const decodedAccessToken = jwtDecode(accessToken);
-        setUser(decodedAccessToken);
+        console.log(decodedAccessToken);
+        if (!decodedAccessToken) {
+            setUserAuth(null);
+        }
+        localStorage.setItem("accessToken", accessToken);
+        return setUserAuth(decodedAccessToken);
     }
-    const logout = () => {
+    const logoutAuth = () => {
         localStorage.removeItem("accessToken");
-        setUser(null);
+        return setUserAuth(null);
     }
     return (
-        <AuthContext.Provider value={{user, login, logout}}>
+        <AuthContext.Provider value={{userAuth, loginAuth, logoutAuth}}>
             {children}
         </AuthContext.Provider>
     );
