@@ -1,56 +1,52 @@
-import { useEffect, useState } from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 import {getUserById, updateUser} from "../api.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
-const UpdateUser = () => {
-    const { id } = useParams();
+const UpdateProfile = () => {
+    const { userAuth } = useAuth();
     const [userData, setUserData] = useState(null);
     const [initialUserData, setInitialUserData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [oldPassword, setOldPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
+    const [oldPassword, setOldPassword] = useState(null);
+    const [newPassword, setNewPassword] = useState(null);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        getUserById(id).then(res => {
+        getUserById(userAuth.userId).then(res => {
             setUserData(res.data.user);
             setInitialUserData(res.data.user);
         }).catch(err => setErrorMessage("No user"));
-    },[id]);
+    },[userAuth.userId]);
 
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-        setUserData(prev => ({ ...prev, [name]: type === "file" ? files[0] : value }));
-    }
+        setUserData({ ...userData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const changedFields = new FormData();
-        for (let key in userData) {
+        const changedFields = {};
+        for (const key in userData) {
             if (userData[key] !== initialUserData[key]) {
-                changedFields.append(key, userData[key]);
+                changedFields[key] = userData[key];
             }
         }
-        if (oldPassword) {
-            changedFields.append("oldPassword", oldPassword);
-        }
-        if (newPassword) {
-            changedFields.append("newPassword", newPassword);
-        }
+        if (oldPassword) changedFields.oldPassword = oldPassword;
+        if (newPassword) changedFields.newPassword = newPassword;
 
-        if (![...changedFields.entries()].length) {
+        if (Object.keys(changedFields).length === 0) {
             setErrorMessage("No changes made.");
             return;
         }
 
         try {
-            const res = await updateUser(id, changedFields);
+            const res = await updateUser(userAuth.userId, { user: changedFields });
             setUserData(res.data.updatedUser);
             setInitialUserData(res.data.updatedUser);
             setOldPassword("");
             setNewPassword("");
-            navigate("/user/users");
+            navigate("/user");
         }
         catch (err) {
             setErrorMessage("Failed to update user.");
@@ -58,7 +54,7 @@ const UpdateUser = () => {
     }
 
     return (userData ? (
-            <form className="col" onSubmit={handleSubmit} encType="multipart/form-data">
+            <form className="col" onSubmit={handleSubmit}>
                 {errorMessage && <div className="alert alert-warning" role="alert">{errorMessage}</div>}
                 <div className="mb-3">
                     <label htmlFor="firstName">Firstname</label>
@@ -77,10 +73,6 @@ const UpdateUser = () => {
                     <input type="password" className="form-control" name="newPassword" id="newPassword" value={userData?.newPassword ?? ""} onChange={handleChange} placeholder="New password" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="profileImage">Choose profile image</label>
-                    <input type="file" className="form-control" accept="image/*" name="profileImage" id="profileImage" onChange={handleChange} />
-                </div>
-                <div className="mb-3">
                     <input type="submit" className="btn btn-primary" name="saveChanges" id="saveChanges" value="Save changes" />
                 </div>
             </form>
@@ -88,4 +80,4 @@ const UpdateUser = () => {
     );
 }
 
-export default UpdateUser;
+export default UpdateProfile;

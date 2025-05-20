@@ -11,9 +11,13 @@ import AuthLayout from "./components/AuthLayout.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import UserProfile from "./components/UserProfile.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
-import UserList from "./components/UserList.jsx";
+import UserListDashboard from "./components/UserListDashboard.jsx";
 import CategoryList from "./components/CategoryList.jsx";
 import PostList from "./components/PostList.jsx";
+import UpdateProfile from "./components/UpdateProfile.jsx";
+import CreateUser from "./components/CreateUser.jsx";
+import UserList from "./components/UserList.jsx";
+import UserDetail from "./components/UserDetail.jsx";
 import UpdateUser from "./components/UpdateUser.jsx";
 
 const App = () => {
@@ -37,9 +41,15 @@ const App = () => {
                     </Route>
                     <Route path="/user" element={<UserDashboard />}>
                         <Route index element={<UserProfile />} />
-                        <Route path="update" element={<UpdateUser />} />
+                        <Route path="update" element={<UpdateProfile />} />
                         <Route path="profile" element={<UserProfile />} />
-                        <Route path="users" element={<UserList />} />
+                        <Route path="users" element={<UserListDashboard />}>
+                            <Route index element={<UserList />} />
+                            <Route path="create" element={<CreateUser />} />
+                            <Route path=":id" element={<UserDetail />} />
+                            <Route path=":id/update" element={<UpdateUser />} />
+                            <Route path=":id/delete" element={<UserDetail />} />
+                        </Route>
                         <Route path="posts" element={<PostList />} />
                         <Route path="categories" element={<CategoryList />} />
                     </Route>

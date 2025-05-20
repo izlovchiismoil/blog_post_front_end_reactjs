@@ -41,7 +41,7 @@ const UserProfile = () => {
                         </div>
                         <div className="row">
                             <span className="col border pt-2 pb-2">User role </span>
-                            <span className="col border pt-2 pb-2">{userData.role}</span>
+                            <span className="col border pt-2 pb-2">{userData.userRole}</span>
                         </div>
                     </div>
                 ) : <h3 className="col">No user</h3>

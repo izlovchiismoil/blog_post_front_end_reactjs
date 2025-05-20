@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
     }, []);
     const loginAuth = (accessToken) => {
         const decodedAccessToken = jwtDecode(accessToken);
-        console.log(decodedAccessToken);
         if (!decodedAccessToken) {
             setUserAuth(null);
         }
