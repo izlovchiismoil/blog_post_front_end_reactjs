@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import UserHeader from "../components/UserHeader.jsx";
+import UserHeader from "../components/User/UserHeader.jsx";
 import {useAuth} from "../contexts/AuthContext.jsx";
-import UserLeftAside from "../components/UserLeftAside.jsx";
+import UserLeftAside from "../components/User/UserLeftAside.jsx";
 
 const UserDashboard = () => {
     const { userAuth } = useAuth();
@@ -19,7 +19,6 @@ const UserDashboard = () => {
                     <UserLeftAside />
                     <Outlet />
                 </div>
-
             </main>
         )
     );

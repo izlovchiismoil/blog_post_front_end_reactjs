@@ -1,6 +1,5 @@
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import NavbarMenu from "./NavbarMenu.jsx";
-import SignIn from "./SignIn.jsx";
 
 const Header = () => {
     return (
@@ -9,7 +8,7 @@ const Header = () => {
                 <Link to="/" className="navbar-brand fs-2">Blog Posts</Link>
             </div>
             <NavbarMenu />
-            <SignIn />
+            <NavLink to={`/auth`} className="btn btn-primary">Sign in</NavLink>
         </header>
     )
 };

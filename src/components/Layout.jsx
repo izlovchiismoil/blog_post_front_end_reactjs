@@ -5,17 +5,17 @@ import Footer from "./Footer.jsx";
 
 const Layout = () => {
     return (
-        <>
-            <Header />
-            <div className="d-flex">
-                <main className="container">
-                    <Outlet />
-                </main>
-                <RightSide />
-            </div>
-            <Footer />
-        </>
-    )
+            <>
+                <Header />
+                <div className="d-flex">
+                    <main className="container">
+                        <Outlet />
+                    </main>
+                    <RightSide />
+                </div>
+                <Footer />
+            </>
+        )
 }
 
 export default Layout;

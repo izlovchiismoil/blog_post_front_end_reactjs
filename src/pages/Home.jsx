@@ -1,17 +1,16 @@
-import React from "react";
-import PostCards from "../components/PostCards.jsx";
-import { Outlet} from "react-router-dom";
+import PostCards from "../components/Post/PostCards.jsx";
+import {Outlet} from "react-router-dom";
 
 const Home = () => {
-            return (
-            <>
-                <section>
-                    <Outlet />
-                </section>
-                <section>
-                    <PostCards />
-                </section>
-            </>
+    return (
+        <>
+            <section>
+                <Outlet />
+            </section>
+            <section>
+                <PostCards />
+            </section>
+        </>
     )
 }
 

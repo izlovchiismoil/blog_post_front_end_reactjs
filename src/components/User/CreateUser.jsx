@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import { createUser } from "../api.js";
+import { createUser } from "../../api.js";
 
 const CreateUser = () => {
     const navigate = useNavigate();
@@ -26,7 +26,6 @@ const CreateUser = () => {
         for (let key in userData) {
             formData.append(key, userData[key]);
         }
-        console.log(formData);
         createUser(formData).then((res) => {
             setUserData(res.data.createdUser);
             navigate("/user/users");

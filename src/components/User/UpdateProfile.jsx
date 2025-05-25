@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {getUserById, updateUser} from "../api.js";
-import {useAuth} from "../contexts/AuthContext.jsx";
+import {getUserById, updateUser} from "../../api.js";
+import {useAuth} from "../../contexts/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 
 const UpdateProfile = () => {
@@ -21,27 +21,28 @@ const UpdateProfile = () => {
     },[userAuth.userId]);
 
     const handleChange = (e) => {
-        setUserData({ ...userData, [e.target.name]: e.target.value });
-    };
+        const { name, value, type, files } = e.target;
+        setUserData(prev => ({ ...prev, [name]: type === "file" ? files[0] : value }));
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const changedFields = {};
+        const changedFields = new FormData();
         for (const key in userData) {
             if (userData[key] !== initialUserData[key]) {
-                changedFields[key] = userData[key];
+                changedFields.append(key, userData[key]);
             }
         }
-        if (oldPassword) changedFields.oldPassword = oldPassword;
-        if (newPassword) changedFields.newPassword = newPassword;
+        if (oldPassword) changedFields.append("oldPassword", oldPassword);
+        if (newPassword) changedFields.append("newPassword", newPassword);
 
-        if (Object.keys(changedFields).length === 0) {
+        if (![...changedFields.entries()].length) {
             setErrorMessage("No changes made.");
             return;
         }
 
         try {
-            const res = await updateUser(userAuth.userId, { user: changedFields });
+            const res = await updateUser(userAuth.userId, changedFields);
             setUserData(res.data.updatedUser);
             setInitialUserData(res.data.updatedUser);
             setOldPassword("");
@@ -49,12 +50,12 @@ const UpdateProfile = () => {
             navigate("/user");
         }
         catch (err) {
-            setErrorMessage("Failed to update user.");
+            setErrorMessage(err.message);
         }
     }
 
     return (userData ? (
-            <form className="col" onSubmit={handleSubmit}>
+            <form className="col" onSubmit={handleSubmit} encType="multipart/form-data">
                 {errorMessage && <div className="alert alert-warning" role="alert">{errorMessage}</div>}
                 <div className="mb-3">
                     <label htmlFor="firstName">Firstname</label>
@@ -71,6 +72,10 @@ const UpdateProfile = () => {
                 <div className="mb-3">
                     <label htmlFor="newPassword">New password</label>
                     <input type="password" className="form-control" name="newPassword" id="newPassword" value={userData?.newPassword ?? ""} onChange={handleChange} placeholder="New password" />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="profileImage">Profile image</label>
+                    <input type="file" className="form-control" name="profileImage" id="profileImage" onChange={handleChange} />
                 </div>
                 <div className="mb-3">
                     <input type="submit" className="btn btn-primary" name="saveChanges" id="saveChanges" value="Save changes" />

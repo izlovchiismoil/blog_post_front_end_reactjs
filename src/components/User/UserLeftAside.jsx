@@ -1,5 +1,5 @@
 import {Link, NavLink, useLocation} from "react-router-dom";
-import {useAuth} from "../contexts/AuthContext.jsx";
+import {useAuth} from "../../contexts/AuthContext.jsx";
 
 const UserDashboard = () => {
     const { userAuth } = useAuth();

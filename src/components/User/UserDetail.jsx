@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {NavLink, useParams} from "react-router-dom";
-import {getUserById} from "../api.js";
+import {getUserById} from "../../api.js";
 
 const UserDetail = () => {
     const [userData, setUserData] = useState([]);
@@ -24,7 +24,7 @@ const UserDetail = () => {
                     </div>
                     {userData.profileImage && (
                         <div className="col-12">
-                            <img src={`http://localhost:3000/profile-image/profile/${userData?.profileImage ?? ""}`} alt="profile-image" style={{width: "100px"}} />
+                            <img src={`http://localhost:3000/images/profile/${userData?.profileImage ?? ""}`} alt="profile-image" style={{width: "100px"}} />
                         </div>
                     )}
                     <div className="col-12 row">

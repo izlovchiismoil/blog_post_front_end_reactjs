@@ -4,21 +4,30 @@ import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
-import PostDetail from "./components/PostDetail.jsx";
-import PostCards from "./components/PostCards.jsx";
-import Login from "./components/Login.jsx";
-import AuthLayout from "./components/AuthLayout.jsx";
-import UserDashboard from "./pages/UserDashboard.jsx";
-import UserProfile from "./components/UserProfile.jsx";
+import PostDetail from "./components/Post/PostDetail.jsx";
+import PostCards from "./components/Post/PostCards.jsx";
+import Login from "./components/Authenticate/Login.jsx";
+import AuthLayout from "./components/Authenticate/AuthLayout.jsx";
+import UserProfile from "./components/User/UserProfile.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
-import UserListDashboard from "./components/UserListDashboard.jsx";
-import CategoryList from "./components/CategoryList.jsx";
-import PostList from "./components/PostList.jsx";
-import UpdateProfile from "./components/UpdateProfile.jsx";
-import CreateUser from "./components/CreateUser.jsx";
-import UserList from "./components/UserList.jsx";
-import UserDetail from "./components/UserDetail.jsx";
-import UpdateUser from "./components/UpdateUser.jsx";
+import UserCategoryList from "./components/Category/UserCategoryList.jsx";
+import UserPostLayout from "./components/Post/UserPostLayout.jsx";
+import UpdateProfile from "./components/User/UpdateProfile.jsx";
+import CreateUser from "./components/User/CreateUser.jsx";
+import UserList from "./components/User/UserList.jsx";
+import UserDetail from "./components/User/UserDetail.jsx";
+import UpdateUser from "./components/User/UpdateUser.jsx";
+import UsersLayout from "./components/User/UsersLayout.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
+import UserPostList from "./components/Post/UserPostList.jsx";
+import UserPostDetail from "./components/Post/UserPostDetail.jsx";
+import UserPostUpdate from "./components/Post/UserPostUpdate.jsx";
+import UserPostCreate from "./components/Post/UserPostCreate.jsx";
+import UserCategoryLayout from "./components/Category/UserCategoryLayout.jsx";
+import UserCategoryDetail from "./components/Category/UserCategoryDetail.jsx";
+import UserCategoryUpdate from "./components/Category/UserCategoryUpdate.jsx";
+import UserCategoryCreate from "./components/Category/UserCategoryCreate.jsx";
+import UserPostsOfCategory from "./components/Post/UserPostsOfCategory.jsx";
 
 const App = () => {
     return (
@@ -37,21 +46,32 @@ const App = () => {
                     <Route path="/auth" element={<AuthLayout />}>
                         <Route index element={<Login />} />
                         <Route path="login" element={<Login />} />
-                        <Route path="logout" element={<Login />} />
                     </Route>
                     <Route path="/user" element={<UserDashboard />}>
                         <Route index element={<UserProfile />} />
-                        <Route path="update" element={<UpdateProfile />} />
                         <Route path="profile" element={<UserProfile />} />
-                        <Route path="users" element={<UserListDashboard />}>
+                        <Route path="update" element={<UpdateProfile />} />
+                        <Route path="users" element={<UsersLayout />}>
                             <Route index element={<UserList />} />
                             <Route path="create" element={<CreateUser />} />
                             <Route path=":id" element={<UserDetail />} />
                             <Route path=":id/update" element={<UpdateUser />} />
                             <Route path=":id/delete" element={<UserDetail />} />
                         </Route>
-                        <Route path="posts" element={<PostList />} />
-                        <Route path="categories" element={<CategoryList />} />
+                        <Route path="posts" element={<UserPostLayout />}>
+                            <Route index element={<UserPostList />} />
+                            <Route path="create" element={<UserPostCreate />} />
+                            <Route path=":id" element={<UserPostDetail />} />
+                            <Route path=":id/update" element={<UserPostUpdate />} />
+                            <Route path=":id/delete" element={<UserPostDetail />} />
+                            <Route path="category/:id" element={<UserPostsOfCategory />} />
+                        </Route>
+                        <Route path="categories" element={<UserCategoryLayout />}>
+                            <Route index element={<UserCategoryList />} />
+                            <Route path=":id" element={<UserCategoryDetail />} />
+                            <Route path=":id/update" element={<UserCategoryUpdate />} />
+                            <Route path="create" element={<UserCategoryCreate />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

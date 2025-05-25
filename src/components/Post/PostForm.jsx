@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {getPostById, createPost, updatePost, getCategories} from "../api.js";
+import {getPostById, createPost, updatePost, getCategories} from "../../api.js";
 
 const PostForm = () => {
     const [formData, setFormData] = useState({

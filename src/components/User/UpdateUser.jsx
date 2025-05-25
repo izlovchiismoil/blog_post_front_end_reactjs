@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {getUserById, updateUser} from "../api.js";
+import {getUserById, updateUser} from "../../api.js";
 
 const UpdateUser = () => {
     const { id } = useParams();
@@ -32,12 +32,8 @@ const UpdateUser = () => {
                 changedFields.append(key, userData[key]);
             }
         }
-        if (oldPassword) {
-            changedFields.append("oldPassword", oldPassword);
-        }
-        if (newPassword) {
-            changedFields.append("newPassword", newPassword);
-        }
+        if (oldPassword) changedFields.append("oldPassword", oldPassword);
+        if (newPassword) changedFields.append("newPassword", newPassword);
 
         if (![...changedFields.entries()].length) {
             setErrorMessage("No changes made.");
