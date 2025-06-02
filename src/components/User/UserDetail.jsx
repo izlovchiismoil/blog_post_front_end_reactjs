@@ -24,7 +24,7 @@ const UserDetail = () => {
                     </div>
                     {userData.profileImage && (
                         <div className="col-12">
-                            <img src={`http://localhost:3000/images/profile/${userData?.profileImage ?? ""}`} alt="profile-image" style={{width: "100px"}} />
+                            <img src={`http://localhost:3000/images/profile/${userData?.profileImage ?? "no-image.png"}`} alt="profile-image" style={{width: "100px"}} />
                         </div>
                     )}
                     <div className="col-12 row">

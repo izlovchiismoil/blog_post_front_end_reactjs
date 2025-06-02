@@ -54,7 +54,7 @@ const UserPostList = () => {
                     <span className="col text-decoration-none">{post.user.username}</span>
                     <NavLink to={`/user/posts/category/${post.categoryId}`} className="col text-decoration-none">{post.category.title}</NavLink>
                     <div className="col-3 pt-2 pb-2 row">
-                        <NavLink to={`/user/posts/${post.id}`} className="col">View</NavLink>
+                        <NavLink to={`/posts/${post.id}`} target="_blank" className="col">View</NavLink>
                         <NavLink to={`/user/posts/${post.id}/update`} className="col">Edit</NavLink>
                         <button className="col nav-link" onClick={() => handleDelete(post.id)}>Delete</button>
                     </div>

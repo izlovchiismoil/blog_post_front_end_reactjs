@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
-import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import PostDetail from "./components/Post/PostDetail.jsx";
@@ -35,8 +34,8 @@ const App = () => {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>
-                        <Route index element={<Home />} />
-                        <Route path="posts" element={<Home />}>
+                        <Route index element={<PostCards />} />
+                        <Route path="posts" element={<PostCards />}>
                             <Route path=":id" element={<PostDetail />} />
                         </Route>
                         <Route path="posts/category/:id" element={<PostCards />} />

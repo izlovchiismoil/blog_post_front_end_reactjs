@@ -6,7 +6,8 @@ const API1 = axios.create({
     baseURL: "http://localhost:3000/api/v1",
     headers: {
         "Content-Type": "multipart/form-data"
-    }
+    },
+    credentials: "include"
 });
 
 API1.interceptors.request.use((req) => {
@@ -21,7 +22,8 @@ const API = axios.create({
     baseURL: "http://localhost:3000/api/v1",
     headers: {
         "Content-Type": "application/json"
-    }
+    },
+    withCredentials: true
 });
 
 API.interceptors.request.use((req) => {
@@ -30,11 +32,24 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-API.interceptors.response.use((res) => {
-    if (res.data.error) {
-        console.log("Daxshat xatolik: ",res.data.error);
-    }
-});
+// API.interceptors.response.use((res) => res, async (error) => {
+//     const originalRequest = error.config;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//         originalRequest._retry = true;
+//         try {
+//             const res = await refreshAccessToken();
+//             const newAccessToken = res.data.accessToken;
+//             localStorage.setItem("accessToken", newAccessToken);
+//             originalRequest.headers.authorization = `Bearer ${newAccessToken}`;
+//             return API(originalRequest);
+//         }
+//         catch (refreshError) {
+//             console.error("Refresh token xatosi: ", refreshError);
+//             return Promise.reject(refreshError);
+//         }
+//     }
+//     return Promise.reject(error);
+// });
 
 
 
@@ -49,11 +64,13 @@ export const deleteUser = (id) => API.delete(`/users/${id}`);
 
 // Authenticate
 export const loginUser = (credentials) => API.post("/auth/login", credentials);
+export const refreshAccessToken = () => API.post(`/auth/refresh`);
 
 
 // Post
 export const createPost = (data) => API1.post("/posts/create", data);
 export const getPosts = () => API.get("/posts/all");
+export const getPostsByPagination = (page, limit) => API.get(`/posts?page=${page}&limit=${limit}`);
 export const getPostById = (id) => API.get(`/posts/${id}`);
 export const getPostsByAuthorId = (id) => API.get(`/posts/author/${id}`);
 export const getPostsByCategoryIdByAuthorId = (authorId, categoryId) => API.get(`/posts/users/${authorId}/posts?categoryId=${categoryId}`);

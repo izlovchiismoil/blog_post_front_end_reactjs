@@ -13,9 +13,9 @@ const UserProfile = () => {
             navigate("/auth");
         }
         getUserById(userAuth.userId).then((res) => {
+            console.log(res.data.user);
             setUserData(res.data.user);
         }).catch((err) => {
-            console.error(err);
             navigate("/auth");
         });
     }, []);
@@ -29,7 +29,7 @@ const UserProfile = () => {
                         </div>
                         {userData.profileImage && (
                             <div className="col-12">
-                                <img src={`http://localhost:3000/images/profile/${userData?.profileImage ?? ""}`} alt="profile-image" style={{width: "100px"}} />
+                                <img src={`http://localhost:3000/api/v1/images/profile/${userData?.profileImage ?? "no-image.png"}`} alt="profile-image" style={{width: "100px"}} />
                             </div>
                         )}
                         <div className="row">

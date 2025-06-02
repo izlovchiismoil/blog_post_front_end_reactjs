@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from "react";
 import {Link, useParams} from "react-router-dom";
 import Pagination from "../Pagination.jsx";
-import {getPostsByCategoryId, getPosts} from "../../api.js";
+import {getPostsByCategoryId, getPosts, getPostsByPagination} from "../../api.js";
 
 const PostCards = () => {
+    const [posts, setPosts] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit, setLimit] = useState(4);
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
-    const [posts, setPosts] = useState(null);
 
     useEffect(() => {
-        if (id) {
-            getPostsByCategoryId(id).then((res) => {
+        (id ? getPostsByCategoryId(id) : getPostsByPagination(currentPage, limit))
+            .then(res => {
                 setPosts(res.data.posts);
                 setLoading(false);
             }).catch((err) => {
-                console.log(err);
-                setErrorMessage("Post not found");
+                setErrorMessage(err.message);
             });
-        }
-        else {
-            getPosts().then((res) => {
-                setPosts(res.data.posts);
-                setLoading(false);
-            }).catch((err) => {
-                if (err.status === 404) {
-                    setErrorMessage("Post not found");
-                }
-            });
-        }
-    }, [id]);
+    }, [id, currentPage, limit]);
     if (loading) {
         return <p>Loading...</p>
     }
+    // const handlePageChange = (page) => {
+    //     console.log(page);
+    //     setCurrentPage(parseInt(page));
+    // }
 
     return (posts.length ?
         (
@@ -41,16 +36,35 @@ const PostCards = () => {
                     {
                         posts.map(post => (
                                 <div className="card pb-3" key={post.id} style={{ width: "18rem" }}>
-                                    {post.postImage && (<img src={`http://localhost:3000/images/posts/${post?.postImage ?? "no-image.png"}`} alt="post-image" className="card-img-top" />)}
-                                    <h3 className="card-title ps-2">{post.title}</h3>
-                                    <p className="card-text ps-2">{post.content}</p>
+                                    {post?.postImage && (<img src={`http://localhost:3000/api/v1/images/posts/${post?.postImage ?? "no-image.png"}`}  alt="post-image" className="card-img-top" style={{height: "200px"}} />)}
+                                    <h3 className="card-title">{post.title}</h3>
+                                    <p className="card-text">{post.shortTitle}</p>
                                     <Link to={`/posts/${post.id}`} className="card-link ps-2">Read more...</Link>
                                 </div>
                             )
                         )
                     }
                 </div>
-                <Pagination />
+                <nav className="d-flex justify-content-center" aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className="page-item"><button className="page-link">Previous</button></li>
+                        <li className="page-item"><button className="page-link" onClick={()=> setCurrentPage(1)}>1</button></li>
+                        <li className="page-item"><button className="page-link" onClick={()=> setCurrentPage(2)}>2</button></li>
+                        <li className="page-item"><button className="page-link">...</button></li>
+                        <li className="page-item"><button className="page-link">{totalPages}</button></li>
+                        <li className="page-item"><button className="page-link">Next</button></li>
+                    </ul>
+                </nav>
+                {/*<Pagination*/}
+                {/*    posts={posts}*/}
+                {/*    setPosts={setPosts}*/}
+                {/*    currentPage={currentPage}*/}
+                {/*    setCurrentPage={setCurrentPage}*/}
+                {/*    totalPages={totalPages}*/}
+                {/*    setTotalPages={setTotalPages}*/}
+                {/*    limit={limit}*/}
+                {/*    handlePageChange={handlePageChange}*/}
+                {/*/>*/}
             </>
         ) : <h3 className="text-info">No posts</h3>
     );
