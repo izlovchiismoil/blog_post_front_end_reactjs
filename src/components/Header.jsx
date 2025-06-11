@@ -1,4 +1,4 @@
-import {Link, NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import NavbarMenu from "./NavbarMenu.jsx";
 
 const Header = () => {
@@ -8,7 +8,7 @@ const Header = () => {
                 <Link to="/" className="navbar-brand fs-2">Blog Posts</Link>
             </div>
             <NavbarMenu />
-            <NavLink to={`/auth`} className="btn btn-primary">Sign in</NavLink>
+            <Link to={`/auth`} className="btn btn-primary">Sign in</Link>
         </header>
     )
 };

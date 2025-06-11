@@ -70,7 +70,7 @@ export const refreshAccessToken = () => API.post(`/auth/refresh`);
 // Post
 export const createPost = (data) => API1.post("/posts/create", data);
 export const getPosts = () => API.get("/posts/all");
-export const getPostsByPagination = (page, limit) => API.get(`/posts?page=${page}&limit=${limit}`);
+export const getPostsByPagination = (currentPage, limit) => API.get(`/posts?currentPage=${currentPage}&limit=${limit}`);
 export const getPostById = (id) => API.get(`/posts/${id}`);
 export const getPostsByAuthorId = (id) => API.get(`/posts/author/${id}`);
 export const getPostsByCategoryIdByAuthorId = (authorId, categoryId) => API.get(`/posts/users/${authorId}/posts?categoryId=${categoryId}`);

@@ -1,37 +1,71 @@
-import React, { useEffect, useState } from "react";
-import {Link, useParams} from "react-router-dom";
-import Pagination from "../Pagination.jsx";
-import {getPostsByCategoryId, getPosts, getPostsByPagination} from "../../api.js";
+import {Link} from "react-router-dom";
+import {usePosts} from "../../contexts/PostContext.jsx";
+import {useEffect, useState} from "react";
 
 const PostCards = () => {
-    const [posts, setPosts] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [limit, setLimit] = useState(4);
+    const {
+        posts,
+        currentPage,
+        setCurrentPage,
+        totalPages
+    } = usePosts();
+
     const [errorMessage, setErrorMessage] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const { id } = useParams();
+    const [paginationList, setPaginationList] = useState([]);
+
+    const handleNextPage = () => {
+        if ((currentPage + 1) <= totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    }
+    const handlePreviousPage = () => {
+        if ((currentPage - 1) > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    }
 
     useEffect(() => {
-        (id ? getPostsByCategoryId(id) : getPostsByPagination(currentPage, limit))
-            .then(res => {
-                setPosts(res.data.posts);
-                setLoading(false);
-            }).catch((err) => {
-                setErrorMessage(err.message);
-            });
-    }, [id, currentPage, limit]);
-    if (loading) {
-        return <p>Loading...</p>
-    }
-    // const handlePageChange = (page) => {
-    //     console.log(page);
-    //     setCurrentPage(parseInt(page));
-    // }
+        if (totalPages > 0) {
+            const paginationArray = [];
+            paginationArray.push(1);
+            if (totalPages === 1) {
+                setPaginationList(paginationArray);
+                return;
+            }
+            if (totalPages <= 6) {
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationArray.push(i);
+                }
+                setPaginationList(paginationArray);
+                return;
+            }
 
-    return (posts.length ?
+            if (totalPages >= 7) {
+                if (currentPage === 1) {
+                    paginationArray.push(2);
+                    paginationArray.push(3);
+                    paginationArray.push("...");
+                    paginationArray.push(totalPages - 1);
+                    paginationArray.push(totalPages);
+                    setPaginationList(paginationArray);
+                    return;
+                }
+                if (currentPage !== 1 && currentPage < (totalPages - 2)) {
+                    paginationArray.push(currentPage);
+                    paginationArray.push(currentPage + 1);
+                    paginationArray.push("...");
+                    paginationArray.push(totalPages - 1);
+                    paginationArray.push(totalPages);
+                    setPaginationList(paginationArray);
+                }
+            }
+        }
+    },[currentPage, posts]);
+
+    return (posts?.length > 0 ?
         (
             <>
+                {errorMessage && (<div className="alert alert-info">{errorMessage}</div>)}
                 <div className="d-flex justify-content-center flex-wrap gap-3 mb-4">
                     {
                         posts.map(post => (
@@ -45,26 +79,24 @@ const PostCards = () => {
                         )
                     }
                 </div>
-                <nav className="d-flex justify-content-center" aria-label="Page navigation example">
-                    <ul className="pagination">
-                        <li className="page-item"><button className="page-link">Previous</button></li>
-                        <li className="page-item"><button className="page-link" onClick={()=> setCurrentPage(1)}>1</button></li>
-                        <li className="page-item"><button className="page-link" onClick={()=> setCurrentPage(2)}>2</button></li>
-                        <li className="page-item"><button className="page-link">...</button></li>
-                        <li className="page-item"><button className="page-link">{totalPages}</button></li>
-                        <li className="page-item"><button className="page-link">Next</button></li>
-                    </ul>
-                </nav>
-                {/*<Pagination*/}
-                {/*    posts={posts}*/}
-                {/*    setPosts={setPosts}*/}
-                {/*    currentPage={currentPage}*/}
-                {/*    setCurrentPage={setCurrentPage}*/}
-                {/*    totalPages={totalPages}*/}
-                {/*    setTotalPages={setTotalPages}*/}
-                {/*    limit={limit}*/}
-                {/*    handlePageChange={handlePageChange}*/}
-                {/*/>*/}
+                {
+                    paginationList?.length > 0 && (
+                        <nav className="d-flex justify-content-center" aria-label="Page navigation example">
+                            <ul className="pagination">
+                                <li className="page-item"><button className="page-link" onClick={handlePreviousPage }>Preview</button></li>
+                                {paginationList.map((item, i) => (
+                                    <li key={i} className="page-item">
+                                        {
+                                            item !== "..." ? (<button className="page-link" onClick={() => setCurrentPage(item)}>{item}</button>)
+                                                :(<button className="page-link">{item}</button>)
+                                        }
+                                    </li>
+                                ))}
+                                <li className="page-item"><button className="page-link" onClick={handleNextPage}>Next</button></li>
+                            </ul>
+                        </nav>
+                    )
+                }
             </>
         ) : <h3 className="text-info">No posts</h3>
     );

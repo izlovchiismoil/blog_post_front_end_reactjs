@@ -1,5 +1,5 @@
 import {useAuth} from "../../contexts/AuthContext.jsx";
-import {NavLink, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const UserHeader = () => {
     const { userAuth, logoutAuth } = useAuth();
@@ -20,7 +20,7 @@ const UserHeader = () => {
                 : (
                     <div className="col-12 row">
                         <div className="col-6 d-flex justify-content-center align-items-center">
-                            <NavLink to={`/`} className="btn btn-primary">&larr; Main</NavLink>
+                            <Link to={`/`} className="btn btn-primary">&larr; Main</Link>
                         </div>
                         <p className="navbar-brand fs-2 col-6">User login</p>
                     </div>

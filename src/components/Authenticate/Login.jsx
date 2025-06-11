@@ -3,8 +3,6 @@ import { loginUser } from "../../api.js";
 import {useAuth} from "../../contexts/AuthContext.jsx";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const [formValues, setFormValues] = useState({
         username: "",
         password: "",

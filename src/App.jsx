@@ -27,53 +27,55 @@ import UserCategoryDetail from "./components/Category/UserCategoryDetail.jsx";
 import UserCategoryUpdate from "./components/Category/UserCategoryUpdate.jsx";
 import UserCategoryCreate from "./components/Category/UserCategoryCreate.jsx";
 import UserPostsOfCategory from "./components/Post/UserPostsOfCategory.jsx";
+import {PostsProvider} from "./contexts/PostContext.jsx";
+import PostCardsByCategory from "./components/Post/PostCardsByCategory.jsx";
 
 const App = () => {
     return (
         <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<PostCards />} />
-                        <Route path="posts" element={<PostCards />}>
-                            <Route path=":id" element={<PostDetail />} />
+            <PostsProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Layout />}>
+                            <Route index element={<PostCards />} />
+                            <Route path="posts/:id" element={<PostDetail />} />
+                            <Route path="posts/category/:id" element={<PostCardsByCategory />} />
+                            <Route path="about" element={<About />} />
+                            <Route path="contact" element={<Contact />} />
                         </Route>
-                        <Route path="posts/category/:id" element={<PostCards />} />
-                        <Route path="about" element={<About />} />
-                        <Route path="contact" element={<Contact />} />
-                    </Route>
-                    <Route path="/auth" element={<AuthLayout />}>
-                        <Route index element={<Login />} />
-                        <Route path="login" element={<Login />} />
-                    </Route>
-                    <Route path="/user" element={<UserDashboard />}>
-                        <Route index element={<UserProfile />} />
-                        <Route path="profile" element={<UserProfile />} />
-                        <Route path="update" element={<UpdateProfile />} />
-                        <Route path="users" element={<UsersLayout />}>
-                            <Route index element={<UserList />} />
-                            <Route path="create" element={<CreateUser />} />
-                            <Route path=":id" element={<UserDetail />} />
-                            <Route path=":id/update" element={<UpdateUser />} />
-                            <Route path=":id/delete" element={<UserDetail />} />
+                        <Route path="/auth" element={<AuthLayout />}>
+                            <Route index element={<Login />} />
+                            <Route path="login" element={<Login />} />
                         </Route>
-                        <Route path="posts" element={<UserPostLayout />}>
-                            <Route index element={<UserPostList />} />
-                            <Route path="create" element={<UserPostCreate />} />
-                            <Route path=":id" element={<UserPostDetail />} />
-                            <Route path=":id/update" element={<UserPostUpdate />} />
-                            <Route path=":id/delete" element={<UserPostDetail />} />
-                            <Route path="category/:id" element={<UserPostsOfCategory />} />
+                        <Route path="/user" element={<UserDashboard />}>
+                            <Route index element={<UserProfile />} />
+                            <Route path="profile" element={<UserProfile />} />
+                            <Route path="update" element={<UpdateProfile />} />
+                            <Route path="users" element={<UsersLayout />}>
+                                <Route index element={<UserList />} />
+                                <Route path="create" element={<CreateUser />} />
+                                <Route path=":id" element={<UserDetail />} />
+                                <Route path=":id/update" element={<UpdateUser />} />
+                                <Route path=":id/delete" element={<UserDetail />} />
+                            </Route>
+                            <Route path="posts" element={<UserPostLayout />}>
+                                <Route index element={<UserPostList />} />
+                                <Route path="create" element={<UserPostCreate />} />
+                                <Route path=":id" element={<UserPostDetail />} />
+                                <Route path=":id/update" element={<UserPostUpdate />} />
+                                <Route path=":id/delete" element={<UserPostDetail />} />
+                                <Route path="category/:id" element={<UserPostsOfCategory />} />
+                            </Route>
+                            <Route path="categories" element={<UserCategoryLayout />}>
+                                <Route index element={<UserCategoryList />} />
+                                <Route path=":id" element={<UserCategoryDetail />} />
+                                <Route path=":id/update" element={<UserCategoryUpdate />} />
+                                <Route path="create" element={<UserCategoryCreate />} />
+                            </Route>
                         </Route>
-                        <Route path="categories" element={<UserCategoryLayout />}>
-                            <Route index element={<UserCategoryList />} />
-                            <Route path=":id" element={<UserCategoryDetail />} />
-                            <Route path=":id/update" element={<UserCategoryUpdate />} />
-                            <Route path="create" element={<UserCategoryCreate />} />
-                        </Route>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+                    </Routes>
+                </BrowserRouter>
+            </PostsProvider>
         </AuthProvider>
 )};
 
