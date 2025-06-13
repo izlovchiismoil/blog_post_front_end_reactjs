@@ -1,4 +1,4 @@
-import {Link, NavLink, useLocation} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {useAuth} from "../../contexts/AuthContext.jsx";
 
 const UserDashboard = () => {
@@ -6,7 +6,7 @@ const UserDashboard = () => {
     const location = useLocation();
     const isActive = (path="/user") => location.pathname === path ? "active" : "";
     return (
-        userAuth.userRole === "admin" ? (
+        userAuth.isAdmin ? (
             <div className="col-2">
                 <ul className="list-group shadow">
                     <li className={`list-group-item ${isActive("/user/profile")}`}>
@@ -14,6 +14,9 @@ const UserDashboard = () => {
                     </li>
                     <li className={`list-group-item ${isActive("/user/users")}`}>
                         <NavLink to="users" className="text-decoration-none link-underline">Users</NavLink>
+                    </li>
+                    <li className={`list-group-item ${isActive("/user/roles")}`}>
+                        <NavLink to="roles" className="text-decoration-none link-underline">User roles</NavLink>
                     </li>
                     <li className={`list-group-item ${isActive("/user/posts")}`}>
                         <NavLink to="posts" className="text-decoration-none link-underline">Posts</NavLink>

@@ -5,7 +5,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import { deleteCategory } from "../../api.js";
 
 const UserCategoryList = () => {
-    const [categories, setCategories] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
     const { userAuth } = useAuth();
     const navigate = useNavigate();
@@ -31,13 +31,14 @@ const UserCategoryList = () => {
 
     return (
         <div className="col row">
-            <div className="col-12 d-flex justify-content-end align-items-center pt-3 pb-3 pe-5">
-                <NavLink to={`/user/categories/create`} className="btn btn-primary">+ Create category</NavLink>
-            </div>
-            <div className="alert-danger" role="alert">{errorMessage}</div>
-            <div></div>
+            {userAuth.isAdmin && (
+                <div className="col-12 d-flex justify-content-end align-items-center pt-3 pb-3 pe-5 mb-3">
+                    <NavLink to={`/user/categories/create`} className="btn btn-primary">+ Create category</NavLink>
+                </div>
+            )
+            }
             {
-                categories ? categories.map((category) => (
+                categories?.length > 0 ? categories.map((category) => (
                     <div className="row pt-4 pb-4 shadow" key={category.id}>
                         <span className="col">{category.title}</span>
                         <NavLink to={`/user/posts/category/${category.id}`} className="col">Posts</NavLink>
@@ -55,7 +56,7 @@ const UserCategoryList = () => {
                             }
                         </div>
                     </div>
-                )): <h3>No categories</h3>
+                )): <div className="alert alert-danger" role="alert">{errorMessage}</div>
             }
         </div>
     );

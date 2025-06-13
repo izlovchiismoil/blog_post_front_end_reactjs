@@ -3,17 +3,18 @@ import {NavLink, useParams} from "react-router-dom";
 import {getUserById} from "../../api.js";
 
 const UserDetail = () => {
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const { id } = useParams();
     useEffect(() => {
         getUserById(id).then((res) => {
+            console.log(res.data.user.profileImage);
             setUserData(res.data.user);
         }).catch((err) => {
             console.log(err);
             setErrorMessage("No user found.");
         });
-    },[]);
+    },[id]);
     return (
         userData ? (
             <>
@@ -38,6 +39,10 @@ const UserDetail = () => {
                     <div className="col-12 row">
                         <span className="col border pt-1 pb-1 fw-bold">Username</span>
                         <span className="col border pt-1 pb-1">{userData?.username ?? ""}</span>
+                    </div>
+                    <div className="col-12 row">
+                        <span className="col border pt-1 pb-1 fw-bold">User role</span>
+                        <span className="col border pt-1 pb-1">{userData?.user_role?.title ?? ""}</span>
                     </div>
                 </div>
             </>

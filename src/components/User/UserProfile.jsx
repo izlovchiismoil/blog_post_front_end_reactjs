@@ -13,7 +13,6 @@ const UserProfile = () => {
             navigate("/auth");
         }
         getUserById(userAuth.userId).then((res) => {
-            console.log(res.data.user);
             setUserData(res.data.user);
         }).catch((err) => {
             navigate("/auth");
@@ -46,7 +45,7 @@ const UserProfile = () => {
                         </div>
                         <div className="row">
                             <span className="col border pt-2 pb-2">User role </span>
-                            <span className="col border pt-2 pb-2">{userData.userRole}</span>
+                            <span className="col border pt-2 pb-2">{userData?.user_role?.title}</span>
                         </div>
                     </div>
                 ) : <h3 className="col">No user</h3>

@@ -32,34 +32,17 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-// API.interceptors.response.use((res) => res, async (error) => {
-//     const originalRequest = error.config;
-//     if (error.response?.status === 401 && !originalRequest._retry) {
-//         originalRequest._retry = true;
-//         try {
-//             const res = await refreshAccessToken();
-//             const newAccessToken = res.data.accessToken;
-//             localStorage.setItem("accessToken", newAccessToken);
-//             originalRequest.headers.authorization = `Bearer ${newAccessToken}`;
-//             return API(originalRequest);
-//         }
-//         catch (refreshError) {
-//             console.error("Refresh token xatosi: ", refreshError);
-//             return Promise.reject(refreshError);
-//         }
-//     }
-//     return Promise.reject(error);
-// });
-
-
-
-
 // Users
 export const createUser = (data) => API1.post(`/users/create`, data);
 export const getUsers = () => API.get(`/users/all`);
 export const getUserById = (id) => API.get(`/users/${id}`);
 export const updateUser = (id, data) => API1.patch(`/users/${id}`, data);
 export const deleteUser = (id) => API.delete(`/users/${id}`);
+
+
+// User roles
+export const createUserRole = (data) => API.post(`/roles/create`, data);
+export const getUserRoles = () => API.get(`/roles/all`);
 
 
 // Authenticate

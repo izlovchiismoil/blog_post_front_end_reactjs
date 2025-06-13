@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
-import { createUser } from "../../api.js";
+import {useEffect, useState} from "react";
+import {createUser, getUserRoles} from "../../api.js";
 
 const CreateUser = () => {
     const navigate = useNavigate();
@@ -8,13 +8,21 @@ const CreateUser = () => {
         firstName: "",
         lastName: "",
         username: "",
-        userRole: "",
+        userRoleId: "",
         password: "",
         reEnterPassword: "",
         profileImage: "user.png"
     });
+    const [userRoles, setUserRoles] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    useEffect(() => {
+        getUserRoles().then((res) => {
+            setUserRoles(res.data.userRoles);
+        }).catch((err) => {
+            setErrorMessage(err.message);
+        });
+    },[]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,8 +64,14 @@ const CreateUser = () => {
                 <input type="text" className="form-control" name="username" id="username" value={userData?.username ?? ""} onChange={handleChange} placeholder="Username" />
             </div>
             <div className="mb-3">
-                <label htmlFor="userRole">User role</label>
-                <input type="text" className="form-control" name="userRole" id="userRole" value={userData?.userRole ?? ""} onChange={handleChange} placeholder="User role" />
+                <label htmlFor="userRoleId">User role</label>
+                {userRoles?.length > 0 && (
+                    <select className="form-control" name="userRoleId" id="userRoleId" value={userData?.userRoleId ?? 0} onChange={handleChange}>
+                        {userRoles.map((role) => (
+                            <option key={role?.id} value={role?.id}>{role?.title}</option>
+                        ))}
+                    </select>
+                )}
             </div>
             <div className="mb-3">
                 <label htmlFor="password">New password</label>

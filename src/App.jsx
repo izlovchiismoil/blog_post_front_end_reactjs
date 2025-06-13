@@ -29,10 +29,13 @@ import UserCategoryCreate from "./components/Category/UserCategoryCreate.jsx";
 import UserPostsOfCategory from "./components/Post/UserPostsOfCategory.jsx";
 import {PostsProvider} from "./contexts/PostContext.jsx";
 import PostCardsByCategory from "./components/Post/PostCardsByCategory.jsx";
+import UserRoleLayout from "./components/UserRole/UserRoleLayout.jsx";
+import UserRoleList from "./components/UserRole/UserRoleList.jsx";
+import CreateUserRole from "./components/UserRole/CreateUserRole.jsx";
 
 const App = () => {
     return (
-        <AuthProvider>
+        <AuthProvider>a
             <PostsProvider>
                 <BrowserRouter>
                     <Routes>
@@ -71,6 +74,10 @@ const App = () => {
                                 <Route path=":id" element={<UserCategoryDetail />} />
                                 <Route path=":id/update" element={<UserCategoryUpdate />} />
                                 <Route path="create" element={<UserCategoryCreate />} />
+                            </Route>
+                            <Route path="roles" element={<UserRoleLayout />}>
+                                <Route index element={<UserRoleList />} />
+                                <Route path="create" element={<CreateUserRole />} />
                             </Route>
                         </Route>
                     </Routes>
