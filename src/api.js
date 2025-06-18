@@ -43,6 +43,7 @@ export const deleteUser = (id) => API.delete(`/users/${id}`);
 // User roles
 export const createUserRole = (data) => API.post(`/roles/create`, data);
 export const getUserRoles = () => API.get(`/roles/all`);
+export const getInitialData = () => API.get(`/initial`);
 
 
 // Authenticate
